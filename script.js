@@ -1,4 +1,4 @@
-// Vocabulary arrays for all language modes
+// Vocabulary arrays for all language modes, expanded with more simple words
 const vocabularies = {
   lt: [
     { english: "cat", target: "katė" },
@@ -10,8 +10,12 @@ const vocabularies = {
     { english: "car", target: "automobilis" },
     { english: "house", target: "namas" },
     { english: "book", target: "knyga" },
-    { english: "milk", target: "pienas" }
-    // ... more easy words for 5-year-olds
+    { english: "milk", target: "pienas" },
+    { english: "bird", target: "paukštis" },
+    { english: "fish", target: "žuvis" },
+    { english: "water", target: "vanduo" },
+    { english: "bread", target: "duona" },
+    { english: "egg", target: "kiaušinis" }
   ],
   et: [
     { english: "cat", target: "kass" },
@@ -23,8 +27,12 @@ const vocabularies = {
     { english: "car", target: "auto" },
     { english: "house", target: "maja" },
     { english: "book", target: "raamat" },
-    { english: "milk", target: "piim" }
-    // ... more easy words for 5-year-olds
+    { english: "milk", target: "piim" },
+    { english: "bird", target: "lind" },
+    { english: "fish", target: "kala" },
+    { english: "water", target: "vesi" },
+    { english: "bread", target: "leib" },
+    { english: "egg", target: "muna" }
   ],
   lv: [
     { english: "cat", target: "kaķis" },
@@ -36,7 +44,12 @@ const vocabularies = {
     { english: "car", target: "mašīna" },
     { english: "house", target: "māja" },
     { english: "book", target: "grāmata" },
-    { english: "milk", target: "piens" }
+    { english: "milk", target: "piens" },
+    { english: "bird", target: "putns" },
+    { english: "fish", target: "zivs" },
+    { english: "water", target: "ūdens" },
+    { english: "bread", target: "maize" },
+    { english: "egg", target: "ola" }
   ],
   pl: [
     { english: "cat", target: "kot" },
@@ -48,7 +61,12 @@ const vocabularies = {
     { english: "car", target: "samochód" },
     { english: "house", target: "dom" },
     { english: "book", target: "książka" },
-    { english: "milk", target: "mleko" }
+    { english: "milk", target: "mleko" },
+    { english: "bird", target: "ptak" },
+    { english: "fish", target: "ryba" },
+    { english: "water", target: "woda" },
+    { english: "bread", target: "chleb" },
+    { english: "egg", target: "jajko" }
   ]
 };
 
@@ -62,6 +80,7 @@ const cardBack = flashcard.querySelector('.card-back');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const languageMode = document.getElementById('language-mode');
+const dotsContainer = document.getElementById('dots');
 
 // Map language codes to display names for the back label
 const langDisplayNames = {
@@ -78,8 +97,24 @@ function displayCard(index) {
   cardFront.textContent = card.english;
   cardBack.textContent = card.target;
   flashcard.classList.remove('flipped');
-  // Update back label for accessibility
   cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
+  renderDots();
+}
+
+// Render navigation dots
+function renderDots() {
+  const vocabulary = vocabularies[currentLang];
+  dotsContainer.innerHTML = '';
+  vocabulary.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'dot' + (i === currentCardIndex ? ' active' : '');
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentCardIndex = i;
+      displayCard(currentCardIndex);
+    });
+    dotsContainer.appendChild(dot);
+  });
 }
 
 // Card flip logic: toggles the flipped state on click
@@ -106,8 +141,6 @@ prevBtn.addEventListener('click', function (e) {
 languageMode.addEventListener('change', function () {
   currentLang = languageMode.value;
   currentCardIndex = 0;
-  // Update card back label
-  cardBack.textContent = langDisplayNames[currentLang];
   displayCard(currentCardIndex);
 });
 

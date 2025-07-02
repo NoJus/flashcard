@@ -76,11 +76,13 @@ body {
 
 .card-front {
   z-index: 2;
+  background: #e3f0ff; /* Light blue for English */
 }
 
 .card-back {
   transform: rotateY(180deg);
   color: #007f5f;
+  background: #e6ffe3; /* Light green for translation */
 }
 
 .card.flipped .card-front {
@@ -151,4 +153,20 @@ button#next-btn:hover {
     padding: 10px 16px;
     font-size: 1rem;
   }
+}
+
+.dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d1c4e9;
+  margin: 0 2px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.dot.active {
+  background: #7f5af0;
+  transform: scale(1.2);
+  box-shadow: 0 0 4px #7f5af0;
 } 
