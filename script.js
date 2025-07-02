@@ -1,19 +1,59 @@
-// Vocabulary array (example words)
-const vocabulary = [
-  { english: "cat", lithuanian: "katė" },
-  { english: "dog", lithuanian: "šuo" },
-  { english: "apple", lithuanian: "obuolys" },
-  { english: "ball", lithuanian: "kamuolys" },
-  { english: "sun", lithuanian: "saulė" },
-  { english: "tree", lithuanian: "medis" },
-  { english: "car", lithuanian: "automobilis" },
-  { english: "house", lithuanian: "namas" },
-  { english: "book", lithuanian: "knyga" },
-  { english: "milk", lithuanian: "pienas" }
-  // ... more easy words for 5-year-olds
-];
+// Vocabulary arrays for all language modes
+const vocabularies = {
+  lt: [
+    { english: "cat", target: "katė" },
+    { english: "dog", target: "šuo" },
+    { english: "apple", target: "obuolys" },
+    { english: "ball", target: "kamuolys" },
+    { english: "sun", target: "saulė" },
+    { english: "tree", target: "medis" },
+    { english: "car", target: "automobilis" },
+    { english: "house", target: "namas" },
+    { english: "book", target: "knyga" },
+    { english: "milk", target: "pienas" }
+    // ... more easy words for 5-year-olds
+  ],
+  et: [
+    { english: "cat", target: "kass" },
+    { english: "dog", target: "koer" },
+    { english: "apple", target: "õun" },
+    { english: "ball", target: "pall" },
+    { english: "sun", target: "päike" },
+    { english: "tree", target: "puu" },
+    { english: "car", target: "auto" },
+    { english: "house", target: "maja" },
+    { english: "book", target: "raamat" },
+    { english: "milk", target: "piim" }
+    // ... more easy words for 5-year-olds
+  ],
+  lv: [
+    { english: "cat", target: "kaķis" },
+    { english: "dog", target: "suns" },
+    { english: "apple", target: "ābols" },
+    { english: "ball", target: "bumba" },
+    { english: "sun", target: "saule" },
+    { english: "tree", target: "koks" },
+    { english: "car", target: "mašīna" },
+    { english: "house", target: "māja" },
+    { english: "book", target: "grāmata" },
+    { english: "milk", target: "piens" }
+  ],
+  pl: [
+    { english: "cat", target: "kot" },
+    { english: "dog", target: "pies" },
+    { english: "apple", target: "jabłko" },
+    { english: "ball", target: "piłka" },
+    { english: "sun", target: "słońce" },
+    { english: "tree", target: "drzewo" },
+    { english: "car", target: "samochód" },
+    { english: "house", target: "dom" },
+    { english: "book", target: "książka" },
+    { english: "milk", target: "mleko" }
+  ]
+};
 
 let currentCardIndex = 0;
+let currentLang = 'lt';
 
 // DOM Elements
 const flashcard = document.getElementById('flashcard');
@@ -21,34 +61,57 @@ const cardFront = flashcard.querySelector('.card-front');
 const cardBack = flashcard.querySelector('.card-back');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
+const languageMode = document.getElementById('language-mode');
 
-// Display card function
+// Map language codes to display names for the back label
+const langDisplayNames = {
+  lt: 'Lithuanian',
+  et: 'Estonian',
+  lv: 'Latvian',
+  pl: 'Polish'
+};
+
+// Display card function: updates the card faces with the current word
 function displayCard(index) {
+  const vocabulary = vocabularies[currentLang];
   const card = vocabulary[index];
   cardFront.textContent = card.english;
-  cardBack.textContent = card.lithuanian;
+  cardBack.textContent = card.target;
   flashcard.classList.remove('flipped');
+  // Update back label for accessibility
+  cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
 }
 
-// Card flip logic
+// Card flip logic: toggles the flipped state on click
 flashcard.addEventListener('click', function () {
   flashcard.classList.toggle('flipped');
 });
 
-// Navigation logic
+// Navigation logic: handles next/previous button clicks and wraps around
 nextBtn.addEventListener('click', function (e) {
   e.stopPropagation();
+  const vocabulary = vocabularies[currentLang];
   currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
   displayCard(currentCardIndex);
 });
 
 prevBtn.addEventListener('click', function (e) {
   e.stopPropagation();
+  const vocabulary = vocabularies[currentLang];
   currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
   displayCard(currentCardIndex);
 });
 
-// Initial load
+// Language mode change logic
+languageMode.addEventListener('change', function () {
+  currentLang = languageMode.value;
+  currentCardIndex = 0;
+  // Update card back label
+  cardBack.textContent = langDisplayNames[currentLang];
+  displayCard(currentCardIndex);
+});
+
+// Initial load: show the first card when the DOM is ready
 window.addEventListener('DOMContentLoaded', function () {
   displayCard(currentCardIndex);
 }); 
