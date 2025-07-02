@@ -7,6 +7,15 @@ body {
   justify-content: center;
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
+  /* Playful pastel polka dot background */
+  background-image:
+    radial-gradient(circle at 20% 20%, #ffe066 18px, transparent 19px),
+    radial-gradient(circle at 80% 30%, #b5ead7 18px, transparent 19px),
+    radial-gradient(circle at 60% 80%, #ffb3c6 18px, transparent 19px),
+    radial-gradient(circle at 40% 60%, #b983ff 18px, transparent 19px),
+    radial-gradient(circle at 70% 70%, #f7e9ff 18px, transparent 19px);
+  background-size: 120px 120px;
+  background-repeat: repeat;
 }
 
 #app-container {
@@ -74,6 +83,7 @@ body {
   cursor: pointer;
   perspective: 1000px;
   transition: box-shadow 0.2s;
+  border: 3px solid #000;
 }
 
 /* Card face styles */
@@ -182,6 +192,7 @@ button#next-btn:hover {
   margin: 0 2px;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
+  border: 1px solid #000;
 }
 .dot.active {
   background: #7f5af0;

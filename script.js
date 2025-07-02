@@ -95,26 +95,11 @@ function displayCard(index) {
   const vocabulary = vocabularies[currentLang];
   const card = vocabulary[index];
   const englishWordSpan = document.getElementById('english-word');
-  const speakBtn = document.getElementById('speak-btn');
   englishWordSpan.textContent = card.english;
   cardBack.textContent = card.target;
   flashcard.classList.remove('flipped');
   cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
   renderDots();
-
-  // Speaker button logic (re-attach each time)
-  if (speakBtn) {
-    speakBtn.onclick = function (e) {
-      e.stopPropagation();
-      console.log('Speaker button clicked:', englishWordSpan.textContent);
-      const word = englishWordSpan.textContent;
-      if ('speechSynthesis' in window) {
-        const utter = new window.SpeechSynthesisUtterance(word);
-        utter.lang = 'en-GB';
-        window.speechSynthesis.speak(utter);
-      }
-    };
-  }
 }
 
 // Render navigation dots
