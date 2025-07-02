@@ -1,3 +1,4 @@
+/* Base styles for cheerful, kid-friendly design */
 body {
   background: #f7e9ff;
   min-height: 100vh;
@@ -18,9 +19,12 @@ body {
   align-items: center;
 }
 
+/* Flashcard styles */
 .card {
   width: 320px;
+  max-width: 90vw;
   height: 200px;
+  max-height: 50vw;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.10);
@@ -36,6 +40,7 @@ body {
   transition: box-shadow 0.2s;
 }
 
+/* Card face styles */
 .card-face {
   position: absolute;
   width: 100%;
@@ -48,6 +53,7 @@ body {
   background: #fff;
   font-size: 2.5rem;
   transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
+  text-transform: uppercase;
 }
 
 .card-front {
@@ -67,6 +73,7 @@ body {
   transform: rotateY(0deg);
 }
 
+/* Navigation buttons */
 .navigation {
   display: flex;
   gap: 16px;
@@ -86,4 +93,37 @@ button {
 
 button:hover {
   background: #7f5af0;
+}
+
+button#prev-btn {
+  background: #e63946;
+}
+button#prev-btn:hover {
+  background: #b71c1c;
+}
+button#next-btn {
+  background: #43aa8b;
+}
+button#next-btn:hover {
+  background: #218838;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 600px) {
+  #app-container {
+    padding: 16px 4vw;
+  }
+  .card {
+    width: 90vw;
+    height: 40vw;
+    min-height: 160px;
+    font-size: 1.5rem;
+  }
+  .card-face {
+    font-size: 1.5rem;
+  }
+  button {
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
 } 

@@ -7,16 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Main app container -->
   <div id="app-container">
+    <!-- Flashcard with front and back faces -->
     <div id="flashcard" class="card">
       <div class="card-face card-front">English</div>
       <div class="card-face card-back">Lithuanian</div>
     </div>
+    <!-- Navigation buttons -->
     <div class="navigation">
-      <button id="prev-btn">Previous</button>
-      <button id="next-btn">Next</button>
+      <button id="prev-btn" aria-label="Previous card">&#8592;</button>
+      <button id="next-btn" aria-label="Next card">&#8594;</button>
     </div>
   </div>
+  <!-- JavaScript logic -->
   <script src="script.js"></script>
 </body>
 </html> 
