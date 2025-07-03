@@ -189,18 +189,23 @@ function displayCard(index) {
     speakBtnBack.onclick = function (e) {
       e.stopPropagation();
       e.preventDefault();
-      let word, lang;
+      // Always read the translation shown on the back
+      const translation = document.getElementById('card-translation').textContent;
+      let lang;
       if (currentLang === 'lt-en') {
-        word = card.english;
         lang = 'en-GB';
+      } else if (currentLang === 'lt') {
+        lang = 'lt-LT';
+      } else if (currentLang === 'et') {
+        lang = 'et-EE';
+      } else if (currentLang === 'lv') {
+        lang = 'lv-LV';
+      } else if (currentLang === 'pl') {
+        lang = 'pl-PL';
       } else {
-        word = card.target;
-        lang = currentLang === 'lt' ? 'lt-LT' :
-               currentLang === 'et' ? 'et-EE' :
-               currentLang === 'lv' ? 'lv-LV' :
-               currentLang === 'pl' ? 'pl-PL' : 'en-GB';
+        lang = 'en-GB';
       }
-      speakWord(word, lang);
+      speakWord(translation, lang);
     };
     // Prevent card flip on mobile touch
     speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
