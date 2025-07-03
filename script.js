@@ -191,6 +191,7 @@ function displayCard(index) {
     speakBtnBack.onclick = function (e) {
       e.stopPropagation();
       e.preventDefault();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
       // Always read the translation shown on the back
       const translation = document.getElementById('card-translation').textContent;
       let lang;
@@ -209,9 +210,16 @@ function displayCard(index) {
       }
       speakWord(translation, lang);
     };
-    // Prevent card flip on mobile touch
-    speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
-    speakBtnBack.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
+    speakBtnBack.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    }, { passive: false });
+    speakBtnBack.addEventListener('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    }, { passive: false });
   }
 }
 
