@@ -126,7 +126,7 @@ function displayCard(index) {
 
 // Render navigation dots
 function renderDots() {
-  const vocabulary = vocabularies[currentLang];
+  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
   dotsContainer.innerHTML = '';
   vocabulary.forEach((_, i) => {
     const dot = document.createElement('span');
@@ -148,14 +148,14 @@ flashcard.addEventListener('click', function () {
 // Navigation logic: handles next/previous button clicks and wraps around
 nextBtn.addEventListener('click', function (e) {
   e.stopPropagation();
-  const vocabulary = vocabularies[currentLang];
+  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
   currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
   displayCard(currentCardIndex);
 });
 
 prevBtn.addEventListener('click', function (e) {
   e.stopPropagation();
-  const vocabulary = vocabularies[currentLang];
+  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
   currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
   displayCard(currentCardIndex);
 });
