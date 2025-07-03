@@ -91,6 +91,25 @@ const langDisplayNames = {
   pl: 'Polish'
 };
 
+// Map English words to Iconify icon names
+const iconMap = {
+  cat: 'mdi:cat',
+  dog: 'mdi:dog',
+  apple: 'mdi:food-apple',
+  ball: 'mdi:soccer',
+  sun: 'mdi:weather-sunny',
+  tree: 'mdi:tree',
+  car: 'mdi:car',
+  house: 'mdi:home',
+  book: 'mdi:book-open-page-variant',
+  milk: 'mdi:food-croissant', // closest for milk
+  bird: 'mdi:bird',
+  fish: 'mdi:fish',
+  water: 'mdi:waves',
+  bread: 'mdi:bread-slice',
+  egg: 'mdi:egg'
+};
+
 // Helper: get the vocabulary key for the current mode
 function getVocabKey() {
   return currentLang === 'lt-en' ? 'lt' : currentLang;
@@ -131,15 +150,29 @@ function displayCard(index) {
   if (currentLang === 'lt-en') {
     // Lithuanian - English mode
     englishWordSpan.textContent = card.target;
-    cardBack.textContent = card.english;
+    document.getElementById('card-translation').textContent = card.english;
     cardBack.setAttribute('aria-label', 'English');
   } else {
     englishWordSpan.textContent = card.english;
-    cardBack.textContent = card.target;
+    document.getElementById('card-translation').textContent = card.target;
     cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
   }
   flashcard.classList.remove('flipped');
   renderDots();
+
+  // Set Iconify icon for the English word on the back
+  const iconSpan = document.getElementById('translation-icon');
+  if (iconSpan) {
+    const iconName = iconMap[card.english.toLowerCase()];
+    if (iconName) {
+      iconSpan.innerHTML = `<span class="iconify" data-icon="${iconName}" data-inline="false"></span>`;
+      if (window.Iconify && typeof window.Iconify.scan === 'function') {
+        window.Iconify.scan(iconSpan);
+      }
+    } else {
+      iconSpan.innerHTML = '';
+    }
+  }
 
   // Speaker button logic (front)
   if (speakBtn) {
