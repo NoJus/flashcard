@@ -91,12 +91,43 @@ const langDisplayNames = {
   pl: 'Polish'
 };
 
+// Helper: get the vocabulary key for the current mode
+function getVocabKey() {
+  return currentLang === 'lt-en' ? 'lt' : currentLang;
+}
+
+// Helper: speak a word in the correct language
+function speakWord(word, lang) {
+  if ('speechSynthesis' in window) {
+    const utter = new window.SpeechSynthesisUtterance(word);
+    utter.lang = lang;
+    window.speechSynthesis.speak(utter);
+  }
+}
+
+// Helper: get URL parameter
+function getUrlParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+// Helper: set URL parameter without reloading
+function setUrlParam(name, value) {
+  const params = new URLSearchParams(window.location.search);
+  params.set(name, value);
+  const newUrl = window.location.pathname + '?' + params.toString();
+  window.history.replaceState({}, '', newUrl);
+}
+
 // Display card function: updates the card faces with the current word
 function displayCard(index) {
-  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
+  const vocabulary = vocabularies[getVocabKey()];
   const card = vocabulary[index];
   const englishWordSpan = document.getElementById('english-word');
   const speakBtn = document.getElementById('speak-btn');
+  // If you add a back speaker button, get it here:
+  // const speakBtnBack = document.getElementById('speak-btn-back');
+
   if (currentLang === 'lt-en') {
     // Lithuanian - English mode
     englishWordSpan.textContent = card.target;
@@ -110,23 +141,38 @@ function displayCard(index) {
   flashcard.classList.remove('flipped');
   renderDots();
 
-  // Speaker button logic (re-attach each time)
+  // Speaker button logic (front)
   if (speakBtn) {
     speakBtn.onclick = function (e) {
       e.stopPropagation();
       const word = currentLang === 'lt-en' ? card.target : card.english;
-      if ('speechSynthesis' in window) {
-        const utter = new window.SpeechSynthesisUtterance(word);
-        utter.lang = currentLang === 'lt-en' ? 'lt-LT' : 'en-GB';
-        window.speechSynthesis.speak(utter);
-      }
+      const lang = currentLang === 'lt-en' ? 'lt-LT' : 'en-GB';
+      speakWord(word, lang);
     };
   }
+  // If you add a back speaker button, use this:
+  // if (speakBtnBack) {
+  //   speakBtnBack.onclick = function (e) {
+  //     e.stopPropagation();
+  //     let word, lang;
+  //     if (currentLang === 'lt-en') {
+  //       word = card.english;
+  //       lang = 'en-GB';
+  //     } else {
+  //       word = card.target;
+  //       lang = currentLang === 'lt' ? 'lt-LT' :
+  //              currentLang === 'et' ? 'et-EE' :
+  //              currentLang === 'lv' ? 'lv-LV' :
+  //              currentLang === 'pl' ? 'pl-PL' : 'en-GB';
+  //     }
+  //     speakWord(word, lang);
+  //   };
+  // }
 }
 
 // Render navigation dots
 function renderDots() {
-  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
+  const vocabulary = vocabularies[getVocabKey()];
   dotsContainer.innerHTML = '';
   vocabulary.forEach((_, i) => {
     const dot = document.createElement('span');
@@ -148,14 +194,14 @@ flashcard.addEventListener('click', function () {
 // Navigation logic: handles next/previous button clicks and wraps around
 nextBtn.addEventListener('click', function (e) {
   e.stopPropagation();
-  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
+  const vocabulary = vocabularies[getVocabKey()];
   currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
   displayCard(currentCardIndex);
 });
 
 prevBtn.addEventListener('click', function (e) {
   e.stopPropagation();
-  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
+  const vocabulary = vocabularies[getVocabKey()];
   currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
   displayCard(currentCardIndex);
 });
@@ -164,6 +210,7 @@ prevBtn.addEventListener('click', function (e) {
 languageMode.addEventListener('change', function () {
   currentLang = languageMode.value;
   currentCardIndex = 0;
+  setUrlParam('lang', currentLang);
   displayCard(currentCardIndex);
 });
 
@@ -172,15 +219,14 @@ let touchStartX = 0;
 let touchEndX = 0;
 
 function handleGesture() {
+  const vocabulary = vocabularies[getVocabKey()];
   if (touchEndX < touchStartX - 40) {
     // Swipe left: next card
-    const vocabulary = vocabularies[currentLang];
     currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
     displayCard(currentCardIndex);
   }
   if (touchEndX > touchStartX + 40) {
     // Swipe right: previous card
-    const vocabulary = vocabularies[currentLang];
     currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
     displayCard(currentCardIndex);
   }
@@ -197,5 +243,11 @@ flashcard.addEventListener('touchend', function (e) {
 
 // Initial load: show the first card when the DOM is ready
 window.addEventListener('DOMContentLoaded', function () {
+  // Set language mode from URL if present
+  const urlLang = getUrlParam('lang');
+  if (urlLang && vocabularies[urlLang] || urlLang === 'lt-en') {
+    currentLang = urlLang;
+    languageMode.value = urlLang;
+  }
   displayCard(currentCardIndex);
 }); 
