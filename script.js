@@ -211,6 +211,7 @@ function displayCard(index) {
     };
     // Prevent card flip on mobile touch
     speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
+    speakBtnBack.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
   }
 }
 
