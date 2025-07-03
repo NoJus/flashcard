@@ -188,6 +188,7 @@ function displayCard(index) {
   if (speakBtnBack) {
     speakBtnBack.onclick = function (e) {
       e.stopPropagation();
+      e.preventDefault();
       let word, lang;
       if (currentLang === 'lt-en') {
         word = card.english;
@@ -202,8 +203,8 @@ function displayCard(index) {
       speakWord(word, lang);
     };
     // Prevent card flip on mobile touch
-    speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: false });
-    speakBtnBack.addEventListener('touchend', function(e) { e.stopPropagation(); }, { passive: false });
+    speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
+    speakBtnBack.addEventListener('touchend', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
   }
 }
 
