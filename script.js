@@ -186,7 +186,7 @@ function displayCard(index) {
   }
   // Speaker button logic (back)
   if (speakBtnBack) {
-    speakBtnBack.onclick = function (e) {
+    const speakBackHandler = function (e) {
       e.stopPropagation();
       e.preventDefault();
       // Always read the translation shown on the back
@@ -207,9 +207,10 @@ function displayCard(index) {
       }
       speakWord(translation, lang);
     };
+    speakBtnBack.onclick = speakBackHandler;
+    speakBtnBack.addEventListener('touchend', speakBackHandler);
     // Prevent card flip on mobile touch
     speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
-    speakBtnBack.addEventListener('touchend', function(e) { e.stopPropagation(); e.preventDefault(); }, { passive: false });
   }
 }
 
