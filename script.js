@@ -144,6 +144,7 @@ function displayCard(index) {
   const card = vocabulary[index];
   const englishWordSpan = document.getElementById('english-word');
   const speakBtn = document.getElementById('speak-btn');
+  const speakBtnBack = document.getElementById('speak-btn-back');
   // If you add a back speaker button, get it here:
   // const speakBtnBack = document.getElementById('speak-btn-back');
 
@@ -183,24 +184,27 @@ function displayCard(index) {
       speakWord(word, lang);
     };
   }
-  // If you add a back speaker button, use this:
-  // if (speakBtnBack) {
-  //   speakBtnBack.onclick = function (e) {
-  //     e.stopPropagation();
-  //     let word, lang;
-  //     if (currentLang === 'lt-en') {
-  //       word = card.english;
-  //       lang = 'en-GB';
-  //     } else {
-  //       word = card.target;
-  //       lang = currentLang === 'lt' ? 'lt-LT' :
-  //              currentLang === 'et' ? 'et-EE' :
-  //              currentLang === 'lv' ? 'lv-LV' :
-  //              currentLang === 'pl' ? 'pl-PL' : 'en-GB';
-  //     }
-  //     speakWord(word, lang);
-  //   };
-  // }
+  // Speaker button logic (back)
+  if (speakBtnBack) {
+    speakBtnBack.onclick = function (e) {
+      e.stopPropagation();
+      let word, lang;
+      if (currentLang === 'lt-en') {
+        word = card.english;
+        lang = 'en-GB';
+      } else {
+        word = card.target;
+        lang = currentLang === 'lt' ? 'lt-LT' :
+               currentLang === 'et' ? 'et-EE' :
+               currentLang === 'lv' ? 'lv-LV' :
+               currentLang === 'pl' ? 'pl-PL' : 'en-GB';
+      }
+      speakWord(word, lang);
+    };
+    // Prevent card flip on mobile touch
+    speakBtnBack.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: false });
+    speakBtnBack.addEventListener('touchend', function(e) { e.stopPropagation(); }, { passive: false });
+  }
 }
 
 // Render navigation dots
