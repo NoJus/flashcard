@@ -85,6 +85,7 @@ const dotsContainer = document.getElementById('dots');
 // Map language codes to display names for the back label
 const langDisplayNames = {
   lt: 'Lithuanian',
+  'lt-en': 'English',
   et: 'Estonian',
   lv: 'Latvian',
   pl: 'Polish'
@@ -92,25 +93,31 @@ const langDisplayNames = {
 
 // Display card function: updates the card faces with the current word
 function displayCard(index) {
-  const vocabulary = vocabularies[currentLang];
+  const vocabulary = vocabularies[currentLang === 'lt-en' ? 'lt' : currentLang];
   const card = vocabulary[index];
   const englishWordSpan = document.getElementById('english-word');
   const speakBtn = document.getElementById('speak-btn');
-  englishWordSpan.textContent = card.english;
-  cardBack.textContent = card.target;
+  if (currentLang === 'lt-en') {
+    // Lithuanian - English mode
+    englishWordSpan.textContent = card.target;
+    cardBack.textContent = card.english;
+    cardBack.setAttribute('aria-label', 'English');
+  } else {
+    englishWordSpan.textContent = card.english;
+    cardBack.textContent = card.target;
+    cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
+  }
   flashcard.classList.remove('flipped');
-  cardBack.setAttribute('aria-label', langDisplayNames[currentLang]);
   renderDots();
 
   // Speaker button logic (re-attach each time)
   if (speakBtn) {
     speakBtn.onclick = function (e) {
       e.stopPropagation();
-      console.log('Speaker button clicked:', englishWordSpan.textContent);
-      const word = englishWordSpan.textContent;
+      const word = currentLang === 'lt-en' ? card.target : card.english;
       if ('speechSynthesis' in window) {
         const utter = new window.SpeechSynthesisUtterance(word);
-        utter.lang = 'en-GB';
+        utter.lang = currentLang === 'lt-en' ? 'lt-LT' : 'en-GB';
         window.speechSynthesis.speak(utter);
       }
     };
