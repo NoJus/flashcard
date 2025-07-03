@@ -177,6 +177,7 @@ function displayCard(index) {
 
   // Speaker button logic (front)
   if (speakBtn) {
+    speakBtn.onclick = null; // Defensive: remove any previous handler
     speakBtn.onclick = function (e) {
       e.stopPropagation();
       const word = currentLang === 'lt-en' ? card.target : card.english;
