@@ -187,12 +187,14 @@ function displayCard(index) {
   }
   // Speaker button logic (back)
   if (speakBtnBack) {
-    speakBtnBack.onclick = null;
-    speakBtnBack.onclick = function (e) {
+    // Remove all previous event listeners by replacing the element
+    const newSpeakBtnBack = speakBtnBack.cloneNode(true);
+    speakBtnBack.parentNode.replaceChild(newSpeakBtnBack, speakBtnBack);
+    // Add event listeners only (no onclick assignment)
+    newSpeakBtnBack.addEventListener('click', function(e) {
       e.stopPropagation();
       e.preventDefault();
       if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-      // Always read the translation shown on the back
       const translation = document.getElementById('card-translation').textContent;
       let lang;
       if (currentLang === 'lt-en') {
@@ -209,16 +211,13 @@ function displayCard(index) {
         lang = 'en-GB';
       }
       speakWord(translation, lang);
-    };
-    speakBtnBack.addEventListener('touchstart', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      return false;
     }, { passive: false });
-    speakBtnBack.addEventListener('click', function(e) {
+    newSpeakBtnBack.addEventListener('touchstart', function(e) {
       e.stopPropagation();
       e.preventDefault();
       if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      return false;
     }, { passive: false });
   }
 }
@@ -240,7 +239,16 @@ function renderDots() {
 }
 
 // Card flip logic: toggles the flipped state on click
-flashcard.addEventListener('click', function () {
+flashcard.addEventListener('click', function (e) {
+  // Prevent flip if the click/tap originated from the speaker button or its children
+  const speakBtn = document.getElementById('speak-btn');
+  const speakBtnBack = document.getElementById('speak-btn-back');
+  if (
+    (speakBtn && (e.target === speakBtn || speakBtn.contains(e.target))) ||
+    (speakBtnBack && (e.target === speakBtnBack || speakBtnBack.contains(e.target)))
+  ) {
+    return;
+  }
   flashcard.classList.toggle('flipped');
 });
 
