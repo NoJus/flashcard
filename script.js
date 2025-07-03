@@ -160,6 +160,34 @@ languageMode.addEventListener('change', function () {
   displayCard(currentCardIndex);
 });
 
+// Add swipe gesture support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleGesture() {
+  if (touchEndX < touchStartX - 40) {
+    // Swipe left: next card
+    const vocabulary = vocabularies[currentLang];
+    currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
+    displayCard(currentCardIndex);
+  }
+  if (touchEndX > touchStartX + 40) {
+    // Swipe right: previous card
+    const vocabulary = vocabularies[currentLang];
+    currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
+    displayCard(currentCardIndex);
+  }
+}
+
+flashcard.addEventListener('touchstart', function (e) {
+  touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+flashcard.addEventListener('touchend', function (e) {
+  touchEndX = e.changedTouches[0].screenX;
+  handleGesture();
+}, false);
+
 // Initial load: show the first card when the DOM is ready
 window.addEventListener('DOMContentLoaded', function () {
   displayCard(currentCardIndex);
